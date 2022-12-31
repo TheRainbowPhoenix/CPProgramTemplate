@@ -35,7 +35,7 @@ win32: $(APP_WIN32) Makefile
 all: $(APP_ELF) $(APP_BIN) Makefile
 
 clean:
-	rm -f $(BUILDDIR)/*.o $(APP_ELF) $(APP_BIN)
+	rm -f $(BUILDDIR)/*.o  $(PC_BUILDDIR)/*.o $(APP_ELF) $(APP_BIN)
 
 $(APP_ELF): $(OBJECTS) $(SDK_DIR)/sdk.o linker_hhk.ld
 	@mkdir -p $(DISTDIR)
@@ -53,9 +53,9 @@ $(APP_PC):  $(CC_SOURCES) $(CXX_SOURCES) $(H_INC) $(HPP_INC)
 	$(CC_PC) $(CC_SOURCES) $(CXX_SOURCES) -o $(APP_PC) $(CC_PC_FLAGS)
 
 
+# $(CXX_WIN32) $(PC_OBJECTS) $(CXX_SOURCES) -o $(APP_WIN32) $(CC_WIN32_FLAGS)
 $(APP_WIN32):  $(PC_OBJECTS) $(CXX_SOURCES) $(H_INC) $(HPP_INC)
-	# $(CXX_WIN32) $(PC_OBJECTS) $(CXX_SOURCES) -o $(APP_WIN32) $(CC_WIN32_FLAGS)
-	$(CXX_WIN32) $(PC_OBJECTS) -o $(APP_WIN32) $(CC_WIN32_FLAGS)
+	$(CXX_WIN32) $(PC_OBJECTS) -o $(DISTDIR)/$(APP_WIN32) $(CC_WIN32_FLAGS)
 
 
 # We're not actually building sdk.o, just telling the user they need to do it
@@ -99,10 +99,9 @@ $(PC_BUILDDIR)/%.o: $(SOURCEDIR)/%.c
 	$(CC_WIN32) -c $< -o $@ $(CC_WIN32_FLAGS)
 
 $(PC_BUILDDIR)/%.o: $(SOURCEDIR)/%.cpp
-	@mkdir -p $(PC_BUILDDIR)
 	echo "PC C++"
 	$(CXX_WIN32) -c $< -o $@ $(CC_WIN32_FLAGS)
-	# @$(READELF) $@ -S | grep ".ctors" > /dev/null && echo "ERROR: Global constructors aren't supported." && rm $@ && exit 1 || exit 0
+# @$(READELF) $@ -S | grep ".ctors" > /dev/null && echo "ERROR: Global constructors aren't supported." && rm $@ && exit 1 || exit 0
 
 
 .PHONY: bin hhk pc all clean tests

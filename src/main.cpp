@@ -1,8 +1,10 @@
+#include "CPSDL.h"
+#ifndef PC
 #include <appdef.hpp>
 #include <sdk/calc/calc.hpp>
 #include <sdk/os/lcd.hpp>
 #include <sdk/os/debug.hpp>
-
+#endif
 /*
  * Fill this section in with some information about your app.
  * All fields are optional - so if you don't need one, take it out.
@@ -13,20 +15,24 @@ APP_AUTHOR("My name")
 APP_VERSION("1.0.2")
 
 extern "C"
-void main() {
+#ifdef PC
+int main(int argc, char *argv[]) {
+#else
+void main(){
+#endif
 	calcInit(); //backup screen and init some variables
 
 	// Put your app's code here!
 
 	//Example for fillScreen(color);
-	fillScreen(color(0,64,0));
+	 fillScreen(color(0,64,0));
 
 	//Example for Debug_Printf(x,y,invert_color,0,format_string) //(small text)
 	Debug_Printf(10,1,false,0,"HelloWorld%d",42);
 
 	//Example for Debug_PrintString(string, invert_color) //(big text)
 	Debug_SetCursorPosition(13,1);
-	Debug_PrintString("HelloWorld",0);
+	Debug_PrintString("HelloWorld\n",0);
 
 	//use this command to actually update the screen 
 	LCD_Refresh();
@@ -56,6 +62,8 @@ void main() {
 			break;
 		}
 	}
+
+    Debug_Printf(10,1,false,0,"HelloWorld%d\n",42);
 
 	calcEnd(); //restore screen and do stuff
 }
